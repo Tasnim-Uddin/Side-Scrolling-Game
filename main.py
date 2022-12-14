@@ -1,3 +1,6 @@
+# https://www.techwithtim.net/tutorials/game-development-with-python
+
+
 import pygame
 from pygame.locals import *
 import os
@@ -7,20 +10,30 @@ import math
 pygame.init()
 
 W, H = 800, 447
-win = pygame.display.set_mode((W,H))
+win = pygame.display.set_mode((W, H))
 pygame.display.set_caption('Side Scroller')
 
-bg = pygame.image.load(os.path.join('images','bg.png')).convert()
+bg = pygame.image.load(os.path.join('images', 'bg.png')).convert()
 bgX = 0
 bgX2 = bg.get_width()
 
 clock = pygame.time.Clock()
 
+
 class player(object):
-    run = [pygame.image.load(os.path.join('images', str(x) + '.png')) for x in range(8,16)]
-    jump = [pygame.image.load(os.path.join('images', str(x) + '.png')) for x in range(1,8)]
-    slide = [pygame.image.load(os.path.join('images', 'S1.png')),pygame.image.load(os.path.join('images', 'S2.png')),pygame.image.load(os.path.join('images', 'S2.png')),pygame.image.load(os.path.join('images', 'S2.png')), pygame.image.load(os.path.join('images', 'S2.png')),pygame.image.load(os.path.join('images', 'S2.png')), pygame.image.load(os.path.join('images', 'S2.png')), pygame.image.load(os.path.join('images', 'S2.png')), pygame.image.load(os.path.join('images', 'S3.png')), pygame.image.load(os.path.join('images', 'S4.png')), pygame.image.load(os.path.join('images', 'S5.png'))]
-    jumpList = [1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,3,3,3,3,3,4,4,4,4,4,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,-1,-1,-1,-1,-1,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-3,-3,-3,-3,-3,-3,-3,-3,-3,-3,-3,-3,-4,-4,-4,-4,-4,-4,-4,-4,-4,-4,-4,-4]
+    run = [pygame.image.load(os.path.join('images', str(x) + '.png')) for x in range(8, 16)]
+    jump = [pygame.image.load(os.path.join('images', str(x) + '.png')) for x in range(1, 8)]
+    slide = [pygame.image.load(os.path.join('images', 'S1.png')), pygame.image.load(os.path.join('images', 'S2.png')),
+             pygame.image.load(os.path.join('images', 'S2.png')), pygame.image.load(os.path.join('images', 'S2.png')),
+             pygame.image.load(os.path.join('images', 'S2.png')), pygame.image.load(os.path.join('images', 'S2.png')),
+             pygame.image.load(os.path.join('images', 'S2.png')), pygame.image.load(os.path.join('images', 'S2.png')),
+             pygame.image.load(os.path.join('images', 'S3.png')), pygame.image.load(os.path.join('images', 'S4.png')),
+             pygame.image.load(os.path.join('images', 'S5.png'))]
+    jumpList = [1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4,
+                4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, -1,
+                -1, -1, -1, -1, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3,
+                -3, -3, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4]
+
     def __init__(self, x, y, width, height):
         self.x = x
         self.y = y
@@ -36,7 +49,7 @@ class player(object):
     def draw(self, win):
         if self.jumping:
             self.y -= self.jumpList[self.jumpCount] * 1.2
-            win.blit(self.jump[self.jumpCount//18], (self.x,self.y))
+            win.blit(self.jump[self.jumpCount // 18], (self.x, self.y))
             self.jumpCount += 1
             if self.jumpCount > 108:
                 self.jumpCount = 0
@@ -53,25 +66,29 @@ class player(object):
                 self.slideCount = 0
                 self.slideUp = False
                 self.runCount = 0
-            win.blit(self.slide[self.slideCount//10], (self.x,self.y))
+            win.blit(self.slide[self.slideCount // 10], (self.x, self.y))
             self.slideCount += 1
-            
+
         else:
             if self.runCount > 42:
                 self.runCount = 0
-            win.blit(self.run[self.runCount//6], (self.x,self.y))
+            win.blit(self.run[self.runCount // 6], (self.x, self.y))
             self.runCount += 1
+
 
 def redrawWindow():
     win.blit(bg, (bgX, 0))
     win.blit(bg, (bgX2, 0))
+    runner.draw(win)
     pygame.display.update()
 
+
+runner = player(200, 313, 64, 64)
+pygame.time.set_timer(USEREVENT + 1, 500)
 speed = 30
 run = True
 while run:
     redrawWindow()
-    clock.tick(speed)
     bgX -= 1.4
     bgX2 -= 1.4
     if bgX < bg.get_width() * -1:
@@ -79,10 +96,22 @@ while run:
     if bgX2 < bg.get_width() * -1:
         bgX2 = bg.get_width()
 
-
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
             pygame.quit()
             quit()
+        if event.type == USEREVENT + 1:
+            speed += 1
 
+    keys = pygame.key.get_pressed()
+
+    if keys[K_SPACE] or keys[K_UP]:
+        if not runner.jumping:
+            runner.jumping = True
+
+    if keys[K_DOWN]:
+        if not runner.sliding:
+            runner.sliding = True
+
+    clock.tick(speed)
